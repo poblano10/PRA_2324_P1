@@ -3,19 +3,39 @@
 
 
 template <typename T>
+
 class ListArray : public List<T> {
+
 private:
     T* arr; // Puntero al inicio del array
     int max; // Tamaño actual del array
     int n;   // Número de elementos en la lista
     static const int MINSIZE = 2; // Tamaño mínimo del array
+    void resize(int new_size){
+
+          T aux[new_size];
+	  
+	  for(int i =0 ;i<new_size;i++){
+		  aux[i] = arr[i];
+	  }
+
+	  delete arr;
+
+	  arr = new int [new_size];
+	  for (int i=0;i<new_size;i++){
+		  arr[i] = aux[i];
+		  max = new_size ;
+	  }
+     }
+
 
 public:
     // Constructor
     ListArray() {
-        max = MINSIZE;
+        arr = new T[MINSIZE];
+        max = 2;
         n = 0;
-        arr = new T[max];
+       
     }
 
     // Destructor
@@ -29,8 +49,8 @@ public:
     if(pos > n || pos < 0){
       throw std::out_of_range("Número fuera de rango del array");
     }
-    if(size() == max)
-	    resize(size()*2)
+    if(size() == max){
+	    resize(size()*2);
     }
    if(pos==0){
 	   prepend(e);
@@ -120,22 +140,12 @@ arr[0] = e;
 
     // Sobrecarga global del operador <<
     friend std::ostream& operator<<(std::ostream& out, const ListArray<T>& list) {
+        out<<"List -> [ ";
         for (int i = 0; i < list.n; i++) {
             out << list.arr[i] << " ";
         }
+             out<<"]";
         return out;
-    }
-
-private:
-    // Método privado para redimensionar el array
-    void resize(int new_size) {
-        T* new_arr = new T[new_size];
-        for (int i = 0; i < n; i++) {
-            new_arr[i] = arr[i];
-        }
-        delete[] arr;
-        arr = new_arr;
-        max = new_size;
-    }
+ }
 };
 
